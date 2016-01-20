@@ -37,6 +37,35 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
+// Check if this enemy has collided with player
+// If collision, then decrement player life count and return player to starting tile
+Enemy.prototype.checkCollision = function() {
+    /*
+    From the x,y coordinates of this enemy and player, infer their rectangular boundaries.
+    The x,y coordinates are the lower-left corner of the enemy/player,
+    and the size of the enemy/player is the tile size.
+    Enemies/players must be aligned to discrete rows, so just check if the enemy and player
+    overlap on the x-axis.
+    */
+    var collision = false;
+
+    var enemy_row = (this.y - this.model_row_offset)/tile_h;
+    var player_row = (player.y - player.model_row_offset)/tile_h;
+
+    if (enemy_row == player_row &&
+        this.x <= player.x && player.x <= this.x + tile_w) {
+        collision = true;
+    }
+
+    if (collision) {
+        player_lives--;
+
+        // Move player back to initial location
+        player.x = 2*tile_w;
+        player.y = 4*tile_h + player.model_row_offset;
+    }
+};
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -46,15 +75,17 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
+    // Player sprite
     this.sprite = 'images/char-boy.png';
 
+    // Player location
     this.model_row_offset = -10;
     this.x = 2*tile_w;
     this.y = 4*tile_h + this.model_row_offset;
 };
 
 Player.prototype.update = function(dt) {
-
+    // I don't need this, it's functionality is cleanly included in handleInput()
 };
 
 Player.prototype.render = function() {
@@ -75,6 +106,12 @@ Player.prototype.handleInput = function(key) {
     }
     else if (key === 'down' && this.y - this.model_row_offset < 5*tile_h) {  // FIXME: Just know there are 6 rows, not flexible code
         this.y += tile_h;
+    }
+
+    // If player moves to the water (first row), the player has won
+    var player_row = (this.y - this.model_row_offset)/tile_h;
+    if (player_row == 0) {
+        won = true;
     }
 };
 
@@ -104,6 +141,10 @@ allEnemies = [
     new Enemy(0, 3, getRandomIntInclusive(min_v, max_v))
 ];
 player = new Player();
+
+// Keep track of game stats
+player_lives = 5;
+won = false;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

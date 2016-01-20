@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -95,6 +95,16 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    /* This is called by the update function and loops through all enemies,
+     * checking if each enemy has collided with the player. If there is a 
+     * collision, the player will lose a life and return to the starting tile.
+    */
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            enemy.checkCollision();
+        });
     }
 
     /* This function initially draws the "game level", it will then call

@@ -112,6 +112,9 @@ Player.prototype.handleInput = function(key) {
     var player_row = (this.y - this.model_row_offset)/tile_h;
     if (player_row == 0) {
         won = true;
+
+        // Calculate score
+        score = 100 * player_lives + bonus;
     }
 };
 
@@ -145,6 +148,14 @@ player = new Player();
 // Keep track of game stats
 player_lives = 5;
 won = false;
+bonus = 0;
+score = 0;
+
+// This flag allows us to pause the actual game, for menus etc.
+game_start = false;
+
+// Although, we want to render the initial scene first
+load_initial_scene = true;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -157,4 +168,23 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+
+    // When user presses Space (code = 32), we start new game
+    // e.g. transitioning from welcome screen, new game after game over, etc.
+    if (e.keyCode == 32) {
+        // Re-initialize enemies and player, and game stats
+        allEnemies = [
+            new Enemy(0, 1, getRandomIntInclusive(min_v, max_v)),
+            new Enemy(0, 2, getRandomIntInclusive(min_v, max_v)),
+            new Enemy(0, 3, getRandomIntInclusive(min_v, max_v))
+        ];
+        player = new Player();
+        player_lives = 5;
+        won = false;
+        bonus = 0;
+        score = 0;
+
+        // Set below flag for other code to use
+        game_start = true;
+    }
 });

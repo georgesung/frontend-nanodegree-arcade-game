@@ -44,9 +44,30 @@ var Engine = (function(global) {
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
+         * Only call these functions if game_start is asserted.
+         * We still want to render the game scene when the game is first loaded.
          */
-        update(dt);
-        render();
+        if (game_start || load_initial_scene) {
+            update(dt);
+            render();
+
+            if (load_initial_scene) {
+                drawWelcome();
+                load_initial_scene = false;
+            }
+        }
+
+        // If player is out of lives, game over, and display game over screen
+        if (player_lives <= 0) {
+            game_start = false;
+            drawGameOver();
+        }
+
+        // If player won, display winning screen
+        if (won) {
+            game_start = false;
+            drawWon();
+        }
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -147,6 +168,19 @@ var Engine = (function(global) {
         }
 
         renderEntities();
+
+        // Display game stats, e.g. number of lives
+
+        // Must first draw a big white rectangle over the previous text,
+        // before writing new text
+        ctx.clearRect(0, 0, document.getElementsByTagName('canvas')[0].width, 30);
+
+        // Display game stats: player lives and bonus score
+        ctx.fillStyle = '#505050';
+        ctx.font = '24px Helvetica';
+        ctx.textAlign = 'left';
+        ctx.fillText('Player lives: ' + player_lives +
+            '          Bonus: ' + bonus, 10, 30);
     }
 
     /* This function is called by the render function and is called on each game
@@ -170,6 +204,56 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+    }
+
+    // Draw empty menu screen on canvas
+    function drawMenu() {
+        ctx.fillStyle = '#505050';
+        ctx.fillRect(50, 150, 405, 400);
+        ctx.clearRect(55, 155, 395, 390);
+    }
+
+    // Draw welcome screen
+    function drawWelcome() {
+        drawMenu();
+
+        ctx.fillStyle = '#505050';
+        ctx.textAlign = 'left';
+
+        ctx.font = '30px Helvetica';
+        ctx.fillText('Welcome to Frogger!', 110, 350)
+
+        ctx.font = '24px Helvetica';
+        ctx.fillText('Press <space> to begin', 125, 500);
+    }
+
+    // Draw game over screen
+    function drawGameOver() {
+        drawMenu();
+
+        ctx.fillStyle = '#505050';
+        ctx.textAlign = 'left';
+
+        ctx.font = '30px Helvetica';
+        ctx.fillText('Game over =(', 160, 350)
+
+        ctx.font = '24px Helvetica';
+        ctx.fillText('Press <space> to start new game', 75, 500);
+    }
+
+    // Draw winning screen
+    function drawWon() {
+        drawMenu();
+
+        ctx.fillStyle = '#505050';
+        ctx.textAlign = 'left';
+
+        ctx.font = '30px Helvetica';
+        ctx.fillText('You win! =)', 170, 250)
+        ctx.fillText('Score: ' + score, 160, 350)
+
+        ctx.font = '24px Helvetica';
+        ctx.fillText('Press <space> to start new game', 75, 500);
     }
 
     /* Go ahead and load all of the images we know we're going to need to

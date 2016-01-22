@@ -8,9 +8,9 @@ var Enemy = function(x, y, v) {
     this.sprite = 'images/enemy-bug.png';
 
     // Enemy's location
-    this.model_row_offset = -20;  // pixel offset to align model to tile
-    this.x = x*tile_w;
-    this.y = y*tile_h + this.model_row_offset;
+    this.MODEL_ROW_OFFSET = -20;  // pixel offset to align model to tile
+    this.x = x*TILE_W;
+    this.y = y*TILE_H + this.MODEL_ROW_OFFSET;
 
     // Enemy's velocity (i.e. speed), in pixels per second
     this.v = v;
@@ -31,9 +31,9 @@ Enemy.prototype.update = function(dt) {
     // If the enemy goes off screen to the right, loop back to beginning position
     // Also generate a new random row location, and new random velocity
     if (this.x > document.getElementsByTagName('canvas')[0].width) {
-        this.x = -tile_w;
-        this.y = getRandomIntInclusive(1,3)*tile_h + this.model_row_offset;
-        this.v = getRandomIntInclusive(min_v, max_v);
+        this.x = -TILE_W;
+        this.y = getRandomIntInclusive(1,3)*TILE_H + this.MODEL_ROW_OFFSET;
+        this.v = getRandomIntInclusive(MIN_V, MAX_V);
     }
 };
 
@@ -49,11 +49,11 @@ Enemy.prototype.checkCollision = function() {
     */
     var collision = false;
 
-    var enemy_row = (this.y - this.model_row_offset)/tile_h;
-    var player_row = (player.y - player.model_row_offset)/tile_h;
+    var enemy_row = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
+    var player_row = (player.y - player.MODEL_ROW_OFFSET)/TILE_H;
 
     if (enemy_row == player_row &&
-        this.x <= player.x && player.x <= this.x + tile_w) {
+        this.x <= player.x && player.x <= this.x + TILE_W) {
         collision = true;
     }
 
@@ -61,8 +61,8 @@ Enemy.prototype.checkCollision = function() {
         player_lives--;
 
         // Move player back to initial location
-        player.x = 2*tile_w;
-        player.y = 4*tile_h + player.model_row_offset;
+        player.x = 2*TILE_W;
+        player.y = 4*TILE_H + player.MODEL_ROW_OFFSET;
     }
 };
 
@@ -79,9 +79,9 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
 
     // Player location
-    this.model_row_offset = -10;
-    this.x = 2*tile_w;
-    this.y = 4*tile_h + this.model_row_offset;
+    this.MODEL_ROW_OFFSET = -10;
+    this.x = 2*TILE_W;
+    this.y = 4*TILE_H + this.MODEL_ROW_OFFSET;
 };
 
 Player.prototype.update = function(dt) {
@@ -96,24 +96,24 @@ Player.prototype.handleInput = function(key) {
     // Move the player in the intended direction, if possible
     // Make sure the player never moves outside the playing area
     if (key == 'left' && this.x > 0) {
-        this.x -= tile_w;
+        this.x -= TILE_W;
     }
-    else if (key == 'up' && this.y - this.model_row_offset > 0) {
-        this.y -= tile_h;
+    else if (key == 'up' && this.y - this.MODEL_ROW_OFFSET > 0) {
+        this.y -= TILE_H;
     }
-    else if (key == 'right' && this.x + tile_w < document.getElementsByTagName('canvas')[0].width) {
-        this.x += tile_w;
+    else if (key == 'right' && this.x + TILE_W < document.getElementsByTagName('canvas')[0].width) {
+        this.x += TILE_W;
     }
-    else if (key == 'down' && this.y - this.model_row_offset < 5*tile_h) {  // FIXME: Just know there are 6 rows, not flexible code
-        this.y += tile_h;
+    else if (key == 'down' && this.y - this.MODEL_ROW_OFFSET < 5*TILE_H) {  // FIXME: Just know there are 6 rows, not flexible code
+        this.y += TILE_H;
     }
 
     // Calculate column and row coordinates of player and gem
-    var player_col = this.x/tile_w;
-    var player_row = (this.y - this.model_row_offset)/tile_h;
+    var player_col = this.x/TILE_W;
+    var player_row = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
 
-    var gem_col = (gem.x - gem.model_col_offset)/tile_w;
-    var gem_row = (gem.y - gem.model_row_offset)/tile_h;
+    var gem_col = (gem.x - gem.MODEL_COL_OFFSET)/TILE_W;
+    var gem_row = (gem.y - gem.MODEL_ROW_OFFSET)/TILE_H;
 
     // If player moves to location of a gem, increase the bonus score, and respawn gem
     if (player_col == gem_col && player_row == gem_row) {
@@ -152,10 +152,10 @@ var Gem = function() {
     }
 
     // Gem location
-    this.model_row_offset = 25;
-    this.model_col_offset = 10;
-    this.x = getRandomIntInclusive(0, 4)*tile_w + this.model_col_offset;
-    this.y = getRandomIntInclusive(1, 3)*tile_h + this.model_row_offset;
+    this.MODEL_ROW_OFFSET = 25;
+    this.MODEL_COL_OFFSET = 10;
+    this.x = getRandomIntInclusive(0, 4)*TILE_W + this.MODEL_COL_OFFSET;
+    this.y = getRandomIntInclusive(1, 3)*TILE_H + this.MODEL_ROW_OFFSET;
 };
 
 Gem.prototype.render = function() {
@@ -178,8 +178,8 @@ Gem.prototype.respawn = function(old_x, old_y) {
     }
 
     while (this.x == old_x && this.y == old_y) {
-        this.x = getRandomIntInclusive(0, 4)*tile_w + this.model_col_offset;
-        this.y = getRandomIntInclusive(1, 3)*tile_h + this.model_row_offset;
+        this.x = getRandomIntInclusive(0, 4)*TILE_W + this.MODEL_COL_OFFSET;
+        this.y = getRandomIntInclusive(1, 3)*TILE_H + this.MODEL_ROW_OFFSET;
     }
 };
 
@@ -194,21 +194,21 @@ function getRandomIntInclusive(min, max) {
 
 // x y locations will be multiplied by this amount
 // to get the enemies and player aligned to tiles
-tile_w = 101;
-tile_h = 83;
+TILE_W = 101;
+TILE_H = 83;
 
 // min/max values for random enemy velocities
-min_v = 100;
-max_v = 400;
+MIN_V = 100;
+MAX_V = 400;
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 // Place the gem object in a variable called gem
 allEnemies = [
-    new Enemy(0, 1, getRandomIntInclusive(min_v, max_v)),
-    new Enemy(0, 2, getRandomIntInclusive(min_v, max_v)),
-    new Enemy(0, 3, getRandomIntInclusive(min_v, max_v))
+    new Enemy(0, 1, getRandomIntInclusive(MIN_V, MAX_V)),
+    new Enemy(0, 2, getRandomIntInclusive(MIN_V, MAX_V)),
+    new Enemy(0, 3, getRandomIntInclusive(MIN_V, MAX_V))
 ];
 player = new Player();
 gem = new Gem();
@@ -243,9 +243,9 @@ document.addEventListener('keyup', function(e) {
     if (e.keyCode == 13) {
         // Re-initialize enemies and player, and game stats
         allEnemies = [
-            new Enemy(0, 1, getRandomIntInclusive(min_v, max_v)),
-            new Enemy(0, 2, getRandomIntInclusive(min_v, max_v)),
-            new Enemy(0, 3, getRandomIntInclusive(min_v, max_v))
+            new Enemy(0, 1, getRandomIntInclusive(MIN_V, MAX_V)),
+            new Enemy(0, 2, getRandomIntInclusive(MIN_V, MAX_V)),
+            new Enemy(0, 3, getRandomIntInclusive(MIN_V, MAX_V))
         ];
         player = new Player();
         player_lives = 5;

@@ -3,7 +3,8 @@ frontend-nanodegree-arcade-game
 
 1. How to run the game
 
-Load index.html from your favorite web browser.
+Go to the following URL:
+[http://georgesung.github.io/frontend-nanodegree-arcade-game/](http://georgesung.github.io/frontend-nanodegree-arcade-game/)
 
 2. How to play the game
 

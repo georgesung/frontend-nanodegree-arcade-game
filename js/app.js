@@ -49,16 +49,16 @@ Enemy.prototype.checkCollision = function() {
     */
     var collision = false;
 
-    var enemy_row = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
-    var player_row = (player.y - player.MODEL_ROW_OFFSET)/TILE_H;
+    var enemyRow = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
+    var playerRow = (player.y - player.MODEL_ROW_OFFSET)/TILE_H;
 
-    if (enemy_row == player_row &&
+    if (enemyRow == playerRow &&
         this.x <= player.x && player.x <= this.x + TILE_W) {
         collision = true;
     }
 
     if (collision) {
-        player_lives--;
+        playerLives--;
 
         // Move player back to initial location
         player.x = 2*TILE_W;
@@ -109,28 +109,28 @@ Player.prototype.handleInput = function(key) {
     }
 
     // Calculate column and row coordinates of player and gem
-    var player_col = this.x/TILE_W;
-    var player_row = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
+    var playerCol = this.x/TILE_W;
+    var playerRow = (this.y - this.MODEL_ROW_OFFSET)/TILE_H;
 
-    var gem_col = (gem.x - gem.MODEL_COL_OFFSET)/TILE_W;
-    var gem_row = (gem.y - gem.MODEL_ROW_OFFSET)/TILE_H;
+    var gemCol = (gem.x - gem.MODEL_COL_OFFSET)/TILE_W;
+    var gemRow = (gem.y - gem.MODEL_ROW_OFFSET)/TILE_H;
 
     // If player moves to location of a gem, increase the bonus score, and respawn gem
-    if (player_col == gem_col && player_row == gem_row) {
+    if (playerCol == gemCol && playerRow == gemRow) {
         bonus += 50 + 50*gem.val;
         gem.respawn(gem.x, gem.y);
     }
 
     // If player moves to the water (first row), the player has won
-    if (player_row == 0) {
+    if (playerRow == 0) {
         won = true;
 
         // Calculate score
-        score = 100*player_lives + bonus;
+        score = 100*playerLives + bonus;
 
         // Update personal best score if applicable
-        if (score > personal_best) {
-            personal_best = score;
+        if (score > personalBest) {
+            personalBest = score;
         }
     }
 };
@@ -163,7 +163,7 @@ Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
 };
 
-Gem.prototype.respawn = function(old_x, old_y) {
+Gem.prototype.respawn = function(oldX, oldY) {
     // Respawn a new gem with random color, and random location
     // Make sure new location is different than old location
     this.val = getRandomIntInclusive(0,2);
@@ -177,7 +177,7 @@ Gem.prototype.respawn = function(old_x, old_y) {
         this.sprite = 'images/Gem_Orange.png';
     }
 
-    while (this.x == old_x && this.y == old_y) {
+    while (this.x == oldX && this.y == oldY) {
         this.x = getRandomIntInclusive(0, 4)*TILE_W + this.MODEL_COL_OFFSET;
         this.y = getRandomIntInclusive(1, 3)*TILE_H + this.MODEL_ROW_OFFSET;
     }
@@ -214,17 +214,17 @@ player = new Player();
 gem = new Gem();
 
 // Keep track of game stats
-player_lives = 5;
+playerLives = 5;
 won = false;
 bonus = 0;
 score = 0;
-personal_best = 0;
+personalBest = 0;
 
 // This flag allows us to pause the actual game, for menus etc.
-game_start = false;
+gameStart = false;
 
 // Although, we want to render the initial scene first
-load_initial_scene = true;
+loadInitialScene = true;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -248,12 +248,12 @@ document.addEventListener('keyup', function(e) {
             new Enemy(0, 3, getRandomIntInclusive(MIN_V, MAX_V))
         ];
         player = new Player();
-        player_lives = 5;
+        playerLives = 5;
         won = false;
         bonus = 0;
         score = 0;
 
         // Set below flag for other code to use
-        game_start = true;
+        gameStart = true;
     }
 });

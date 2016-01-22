@@ -44,28 +44,28 @@ var Engine = (function(global) {
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
-         * Only call these functions if game_start is asserted.
+         * Only call these functions if gameStart is asserted.
          * We still want to render the game scene when the game is first loaded.
          */
-        if (game_start || load_initial_scene) {
+        if (gameStart || loadInitialScene) {
             update(dt);
             render();
 
-            if (load_initial_scene) {
+            if (loadInitialScene) {
                 drawWelcome();
-                load_initial_scene = false;
+                loadInitialScene = false;
             }
         }
 
         // If player is out of lives, game over, and display game over screen
-        if (player_lives <= 0) {
-            game_start = false;
+        if (playerLives <= 0) {
+            gameStart = false;
             drawGameOver();
         }
 
         // If player won, display winning screen
         if (won) {
-            game_start = false;
+            gameStart = false;
             drawWon();
         }
 
@@ -179,7 +179,7 @@ var Engine = (function(global) {
         ctx.fillStyle = '#505050';
         ctx.font = '24px Helvetica';
         ctx.textAlign = 'left';
-        ctx.fillText('Player lives: ' + player_lives +
+        ctx.fillText('Player lives: ' + playerLives +
             '          Bonus: ' + bonus, 10, 30);
     }
 
@@ -256,11 +256,11 @@ var Engine = (function(global) {
 
         // Display new personal best message if player beat his/her personal best
         // Else display personal best
-        if (score == personal_best) {
+        if (score == personalBest) {
             ctx.fillText('New personal best!', 130, 350)
         }
         else {
-            ctx.fillText('Personal best: ' + personal_best, 130, 350)
+            ctx.fillText('Personal best: ' + personalBest, 130, 350)
         }
 
         ctx.font = '24px Helvetica';

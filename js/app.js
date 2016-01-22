@@ -127,6 +127,11 @@ Player.prototype.handleInput = function(key) {
 
         // Calculate score
         score = 100*player_lives + bonus;
+
+        // Update personal best score if applicable
+        if (score > personal_best) {
+            personal_best = score;
+        }
     }
 };
 
@@ -213,6 +218,7 @@ player_lives = 5;
 won = false;
 bonus = 0;
 score = 0;
+personal_best = 0;
 
 // This flag allows us to pause the actual game, for menus etc.
 game_start = false;
@@ -232,9 +238,9 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 
-    // When user presses Space (code = 32), we start new game
+    // When user presses Enter (code = 13), we start new game
     // e.g. transitioning from welcome screen, new game after game over, etc.
-    if (e.keyCode == 32) {
+    if (e.keyCode == 13) {
         // Re-initialize enemies and player, and game stats
         allEnemies = [
             new Enemy(0, 1, getRandomIntInclusive(min_v, max_v)),

@@ -173,7 +173,7 @@ var Engine = (function(global) {
 
         // Must first draw a big white rectangle over the previous text,
         // before writing new text
-        ctx.clearRect(0, 0, document.getElementsByTagName('canvas')[0].width, 30);
+        ctx.clearRect(0, 0, document.getElementsByTagName('canvas')[0].width, 35);
 
         // Display game stats: player lives and bonus score
         ctx.fillStyle = '#505050';
@@ -226,7 +226,7 @@ var Engine = (function(global) {
         ctx.fillText('Welcome to Frogger!', 110, 350)
 
         ctx.font = '24px Helvetica';
-        ctx.fillText('Press <space> to begin', 125, 500);
+        ctx.fillText('Press <enter> to begin', 125, 500);
     }
 
     // Draw game over screen
@@ -240,7 +240,7 @@ var Engine = (function(global) {
         ctx.fillText('Game over =(', 160, 350)
 
         ctx.font = '24px Helvetica';
-        ctx.fillText('Press <space> to start new game', 75, 500);
+        ctx.fillText('Press <enter> to start new game', 75, 500);
     }
 
     // Draw winning screen
@@ -252,10 +252,19 @@ var Engine = (function(global) {
 
         ctx.font = '30px Helvetica';
         ctx.fillText('You win! =)', 170, 250)
-        ctx.fillText('Score: ' + score, 160, 350)
+        ctx.fillText('Score: ' + score, 160, 300)
+
+        // Display new personal best message if player beat his/her personal best
+        // Else display personal best
+        if (score == personal_best) {
+            ctx.fillText('New personal best!', 130, 350)
+        }
+        else {
+            ctx.fillText('Personal best: ' + personal_best, 130, 350)
+        }
 
         ctx.font = '24px Helvetica';
-        ctx.fillText('Press <space> to start new game', 75, 500);
+        ctx.fillText('Press <enter> to start new game', 75, 500);
     }
 
     /* Go ahead and load all of the images we know we're going to need to

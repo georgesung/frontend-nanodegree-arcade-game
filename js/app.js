@@ -95,28 +95,89 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
     // Move the player in the intended direction, if possible
     // Make sure the player never moves outside the playing area
-    if (key === 'left' && this.x > 0) {
+    if (key == 'left' && this.x > 0) {
         this.x -= tile_w;
     }
-    else if (key === 'up' && this.y - this.model_row_offset > 0) {
+    else if (key == 'up' && this.y - this.model_row_offset > 0) {
         this.y -= tile_h;
     }
-    else if (key === 'right' && this.x + tile_w < document.getElementsByTagName('canvas')[0].width) {
+    else if (key == 'right' && this.x + tile_w < document.getElementsByTagName('canvas')[0].width) {
         this.x += tile_w;
     }
-    else if (key === 'down' && this.y - this.model_row_offset < 5*tile_h) {  // FIXME: Just know there are 6 rows, not flexible code
+    else if (key == 'down' && this.y - this.model_row_offset < 5*tile_h) {  // FIXME: Just know there are 6 rows, not flexible code
         this.y += tile_h;
     }
 
-    // If player moves to the water (first row), the player has won
+    // Calculate column and row coordinates of player and gem
+    var player_col = this.x/tile_w;
     var player_row = (this.y - this.model_row_offset)/tile_h;
+
+    var gem_col = (gem.x - gem.model_col_offset)/tile_w;
+    var gem_row = (gem.y - gem.model_row_offset)/tile_h;
+
+    // If player moves to location of a gem, increase the bonus score, and respawn gem
+    if (player_col == gem_col && player_row == gem_row) {
+        bonus += 50 + 50*gem.val;
+        gem.respawn(gem.x, gem.y);
+    }
+
+    // If player moves to the water (first row), the player has won
     if (player_row == 0) {
         won = true;
 
         // Calculate score
-        score = 100 * player_lives + bonus;
+        score = 100*player_lives + bonus;
     }
 };
+
+// Gems the player can collect to get bonus points
+var Gem = function() {
+    // Gem value
+    this.val = getRandomIntInclusive(0,2);
+
+    // Choose appropriate sprite based on gem's value
+    if (this.val == 0) {
+        this.sprite = 'images/Gem_Blue.png';
+    }
+    else if (this.val == 1) {
+        this.sprite = 'images/Gem_Green.png';
+    }
+    else {
+        this.sprite = 'images/Gem_Orange.png';
+    }
+
+    // Gem location
+    this.model_row_offset = 25;
+    this.model_col_offset = 10;
+    this.x = getRandomIntInclusive(0, 4)*tile_w + this.model_col_offset;
+    this.y = getRandomIntInclusive(1, 3)*tile_h + this.model_row_offset;
+};
+
+Gem.prototype.render = function() {
+    // Must shrink the original sprite to fit nicely in the tile
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
+};
+
+Gem.prototype.respawn = function(old_x, old_y) {
+    // Respawn a new gem with random color, and random location
+    // Make sure new location is different than old location
+    this.val = getRandomIntInclusive(0,2);
+    if (this.val == 0) {
+        this.sprite = 'images/Gem_Blue.png';
+    }
+    else if (this.val == 1) {
+        this.sprite = 'images/Gem_Green.png';
+    }
+    else {
+        this.sprite = 'images/Gem_Orange.png';
+    }
+
+    while (this.x == old_x && this.y == old_y) {
+        this.x = getRandomIntInclusive(0, 4)*tile_w + this.model_col_offset;
+        this.y = getRandomIntInclusive(1, 3)*tile_h + this.model_row_offset;
+    }
+};
+
 
 // Random integer generation helper function, taken from:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
@@ -138,12 +199,14 @@ max_v = 400;
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+// Place the gem object in a variable called gem
 allEnemies = [
     new Enemy(0, 1, getRandomIntInclusive(min_v, max_v)),
     new Enemy(0, 2, getRandomIntInclusive(min_v, max_v)),
     new Enemy(0, 3, getRandomIntInclusive(min_v, max_v))
 ];
 player = new Player();
+gem = new Gem();
 
 // Keep track of game stats
 player_lives = 5;

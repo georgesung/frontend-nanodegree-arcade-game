@@ -119,7 +119,7 @@ var Engine = (function(global) {
     }
 
     /* This is called by the update function and loops through all enemies,
-     * checking if each enemy has collided with the player. If there is a 
+     * checking if each enemy has collided with the player. If there is a
      * collision, the player will lose a life and return to the starting tile.
     */
     function checkCollisions() {
@@ -188,6 +188,8 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
+        gem.render();
+
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
@@ -265,7 +267,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Gem_Blue.png',
+        'images/Gem_Green.png',
+        'images/Gem_Orange.png'
     ]);
     Resources.onReady(init);
 

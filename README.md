@@ -16,7 +16,7 @@ Use the up/down/left/right arrow keys to move the player.
 Be careful, if you run out of lives, it's game over~
 
 Collect bonus gems to increase your score!
-Blue gem = 50 points, green gem = 100 points, orange gem = 150 points
+Blue gem = 50 points, green gem = 100 points, orange gem = 150 points.
 When you win, each remaining life counts for 100 points.
 
 GL HF!

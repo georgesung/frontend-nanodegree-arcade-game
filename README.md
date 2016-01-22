@@ -1,12 +1,16 @@
-frontend-nanodegree-arcade-game
-===============================
+# Classic Arcade Game Clone
+## Udacity Front-End Nanodegree Project #3
 
-1. How to run the game
+### Overview
+
+This is a clone of the classic arcade game Frogger.
+
+### How to run the game
 
 Go to the following URL:
 [http://georgesung.github.io/frontend-nanodegree-arcade-game/](http://georgesung.github.io/frontend-nanodegree-arcade-game/)
 
-2. How to play the game
+### How to play the game
 
 Move the player safely to the water, and remember to avoid the nasty bugs.
 Use the up/down/left/right arrow keys to move the player.

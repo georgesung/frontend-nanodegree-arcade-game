@@ -1,9 +1,8 @@
 # Classic Arcade Game Clone
-## Udacity Front-End Nanodegree Project #3
 
 ### Overview
 
-This is a clone of the classic arcade game Frogger.
+This is a clone of the classic arcade game Frogger. This project was done as part of Udacity's Front-End Nanodegree program.
 
 ### How to run the game
 
